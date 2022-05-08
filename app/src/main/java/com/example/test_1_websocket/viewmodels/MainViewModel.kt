@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
@@ -11,6 +12,7 @@ import okhttp3.WebSocketListener
 import okio.ByteString
 import javax.inject.Inject
 
+@OptIn(DelicateCoroutinesApi::class)
 @HiltViewModel
 class MainViewModel @Inject constructor(
     application: Application
@@ -30,9 +32,10 @@ class MainViewModel @Inject constructor(
 
 
     open inner class EchoWebSocketListener : WebSocketListener() {
+
         override fun onOpen(webSocket: WebSocket, response: okhttp3.Response) {
             webSocket.send("{\"method\": \"subscribe\",\"ch\": \"ticker/1s/batch\", \"params\": {\"symbols\": [\"ETHBTC\",\"BTCUSD\"]},\"id\": 123}")
-            connect.value = true
+            connect.postValue(true)
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {
@@ -49,19 +52,19 @@ class MainViewModel @Inject constructor(
         override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
             webSocket.close(1000, null)
             output("----> Closing : $code  /  $reason \n")
-            connect.value = false
+            connect.postValue(false)
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: okhttp3.Response?) {
             Log.e("AAA", "----> Error "+ t.message +"\n")
             output("----> Error : " + t.message +"\n")
-            connect.value = false
+            connect.postValue(false)
         }
     }
 
 
     private fun output(txt: String) {
-        mResponseSocket.value = txt
+        mResponseSocket.postValue(txt)
     }
 
 
@@ -71,6 +74,8 @@ class MainViewModel @Inject constructor(
             val request = Request.Builder().url("wss://api.demo.hitbtc.com/api/3/ws/public").build()
             val listener = EchoWebSocketListener()
             client?.newWebSocket(request, listener) // val wss =
+        } else {
+            connect.postValue(false)
         }
     }
 

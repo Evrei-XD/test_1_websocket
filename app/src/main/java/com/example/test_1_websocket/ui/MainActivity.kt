@@ -23,10 +23,10 @@ class MainActivity : AppCompatActivity() {
             connect = it
             if (it) {
                 output_tv.text = ""
-                start_btn.text = "connect"
+                start_btn.text = "unsubscribe"
             } else {
                 output_tv.text = ""
-                start_btn.text = "disconnect"
+                start_btn.text = "connect & subscribe"
             }
         }
         mViewModel.mResponseSocket.observe(this) {
