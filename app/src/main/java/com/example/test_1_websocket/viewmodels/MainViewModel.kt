@@ -24,6 +24,8 @@ class MainViewModel @Inject constructor(
     init {
         Log.e("AAA", "VM created")
         client = OkHttpClient()
+        connect.value = false
+        mResponseSocket.value = ""
     }
 
 
@@ -51,6 +53,7 @@ class MainViewModel @Inject constructor(
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: okhttp3.Response?) {
+            Log.e("AAA", "----> Error "+ t.message +"\n")
             output("----> Error : " + t.message +"\n")
             connect.value = false
         }
@@ -63,6 +66,7 @@ class MainViewModel @Inject constructor(
 
 
     fun start() {
+        Log.e("AAA", "VM start()  connect.value : "+ connect.value)
         if (connect.value == false) {
             val request = Request.Builder().url("wss://api.demo.hitbtc.com/api/3/ws/public").build()
             val listener = EchoWebSocketListener()

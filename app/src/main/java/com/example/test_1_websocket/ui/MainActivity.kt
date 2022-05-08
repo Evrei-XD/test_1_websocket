@@ -2,9 +2,11 @@ package com.example.test_1_websocket.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import com.example.test_1_websocket.R
 import com.example.test_1_websocket.viewmodels.MainViewModel
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mViewModel: MainViewModel
@@ -20,20 +22,20 @@ class MainActivity : AppCompatActivity() {
         mViewModel.connect.observe(this) {
             connect = it
             if (it) {
-//                output_tv.text = ""
-//                start_btn.text = "connect"
+                output_tv.text = ""
+                start_btn.text = "connect"
             } else {
-//                output_tv.text = ""
-//                start_btn.text = "disconnect"
+                output_tv.text = ""
+                start_btn.text = "disconnect"
             }
         }
         mViewModel.mResponseSocket.observe(this) {
             response = it
-//            output_tv.text = it
+            output_tv.text = it
         }
 
-//        start_btn.setOnClickListener {
-//            mViewModel.start()
-//        }
+        start_btn.setOnClickListener {
+            mViewModel.start()
+        }
     }
 }
