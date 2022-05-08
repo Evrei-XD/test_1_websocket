@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Test_1_websocket</string>
+    <string name="connect">connect</string>
 </resources>
